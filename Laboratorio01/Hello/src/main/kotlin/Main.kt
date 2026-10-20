@@ -83,7 +83,8 @@ fun balanco(data: Int): Int {
     return lista
         .filter { it.data <= data }
         .sumOf {
-            if (it.tipo == 'r') it.montante
+            if (it.tipo == 'r')
+                it.montante
             else -it.montante
         }
 }
@@ -97,7 +98,8 @@ fun calcularBalancos(): IntArray {
     val balancos = IntArray(1000)
     for (movimento in lista) {
         movimentosPorData[movimento.data] +=
-            if (movimento.tipo == 'r') movimento.montante
+            if (movimento.tipo == 'r')
+                movimento.montante
             else -movimento.montante
     }
     var acumulado = 0
@@ -110,9 +112,7 @@ fun calcularBalancos(): IntArray {
 
 fun verificar() {
     val balancos = calcularBalancos()
-    val valido = balancos.all {
-        it >= valueMinimo
-    }
+    val valido = balancos.all { it >= valueMinimo }
     println(if (valido) "Valido" else "Invalido")
 }
 
