@@ -5,4 +5,4 @@
 ## 🗂 Laboratórios
 | Pasta | Descrição | Status |
 | :--- | :--- | :--- |
-| [Laboratório 01](./Laboratorio01) | Introdução a Linguagem Kotlin | ⏳ Em progresso  |
+| [Laboratório 01](./Laboratorio01) | Introdução a Linguagem Kotlin | ✅ Concluído  |
