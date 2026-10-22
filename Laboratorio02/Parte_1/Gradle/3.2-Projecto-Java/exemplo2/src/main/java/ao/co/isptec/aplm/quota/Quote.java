@@ -33,15 +33,15 @@ public class Quote {
   	public String toString() {
  		return ToStringBuilder.reflectionToString(this);
  	}
-}
 
-public static void main(String[] args) {
-	System.out.println("Aplicação Quote em execução");
+	public static void main(String[] args) {
+		System.out.println("Aplicacao Quote em execucao");
 
-	Quote q = new Quote();
-	q.setId(1L);
-	q.setWho("Joao Costa");
-	q.setWhat("Deus é vida.");
+		Quote q = new Quote();
+		q.setId(1L);
+		q.setWho("Joao Costa");
+		q.setWhat("Deus eh vida.");
 
-	System.out.println(q);
+		System.out.println(q);
+	}
 }
