@@ -34,3 +34,14 @@ public class Quote {
  		return ToStringBuilder.reflectionToString(this);
  	}
 }
+
+public static void main(String[] args) {
+	System.out.println("Aplicação Quote em execução");
+
+	Quote q = new Quote();
+	q.setId(1L);
+	q.setWho("Joao Costa");
+	q.setWhat("Deus é vida.");
+
+	System.out.println(q);
+}
