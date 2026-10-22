@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "ao.co.isptec.aplm.exercise_1"
-        minSdk = 24
+        minSdk = 23
         targetSdk = 37
         versionCode = 1
         versionName = "1.0"
@@ -33,12 +33,11 @@ android {
 }
 
 dependencies {
-    implementation(libs.androidx.activity.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.androidx.constraintlayout)
-    implementation(libs.androidx.core.ktx)
+    implementation(libs.activity.ktx)
+    implementation(libs.appcompat)
+    implementation(libs.constraintlayout)
     implementation(libs.material)
     testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.espresso.core)
+    androidTestImplementation(libs.ext.junit)
 }
