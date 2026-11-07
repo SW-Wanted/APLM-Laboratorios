@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        tarefas.add(0, tarefa);
+        tarefas.add(tarefas.size(), tarefa);
         adapter.notifyDataSetChanged();
 
         editTextTarefa.setText("");
