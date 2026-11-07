@@ -26,9 +26,14 @@ class DisplayMessageActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        Log.i(TAG, "onCreate: mensagem recebida da MainActivity")
+
         val mensagem = intent.getStringExtra(EXTRA_MESSAGE) ?: ""
         val palavras = mensagem.split(" ").filter { it.isNotBlank() }
+        if (palavras.isEmpty()) Log.w(TAG, "A mensagem recebida não tem palavras.")
         val bundle = PalavraBundle(palavras)
+
         val resumo = gerarResumo(bundle)
         Log.d(TAG, "$bundle\n$resumo")
 
