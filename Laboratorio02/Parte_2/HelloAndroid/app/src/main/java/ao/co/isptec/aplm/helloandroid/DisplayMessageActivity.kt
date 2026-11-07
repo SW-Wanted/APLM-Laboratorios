@@ -5,8 +5,11 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -23,33 +26,28 @@ class DisplayMessageActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        val mensagem: String? = intent.getStringExtra(EXTRA_MESSAGE)
-        val palavras = mensagem?.split(" ")?.filter { it.isNotBlank() } ?: listOf()
-        val wordCount = palavras.size
+        val mensagem = intent.getStringExtra(EXTRA_MESSAGE) ?: ""
+        val palavras = mensagem.split(" ").filter { it.isNotBlank() }
+        val bundle = PalavraBundle(palavras)
+        val resumo = gerarResumo(bundle)
+        Log.d(TAG, "$bundle\n$resumo")
 
-        val sumario = when {
-            wordCount == 0 -> "Nenhuma palavra encontrada!"
-            wordCount == 1 -> "Apenas uma palavra!"
-            else -> "Foram digitadas $wordCount palavras."
-        }
-        var textoEcra = sumario
-        if (mensagem != null && wordCount > 0) {
-            textoEcra = "\"$mensagem\"\n\n$sumario"
-        }
-
-        Log.d(TAG, "Palavras: $palavras | $sumario")
+        val titulo = mensagem.ifBlank { "Nenhuma mensagem recebida." }
 
         setContent {
             HelloAndroidTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Box(
-                        contentAlignment = Alignment.Center,
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center,
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(innerPadding)
                             .padding(16.dp)
                     ) {
-                        Text(text = textoEcra, fontSize = 24.sp, textAlign = TextAlign.Center)
+                        Text(text = titulo, fontSize = 24.sp, textAlign = TextAlign.Center)
+                        Spacer(modifier = Modifier.height(24.dp))
+                        Text(text = resumo, fontSize = 16.sp)
                     }
                 }
             }
