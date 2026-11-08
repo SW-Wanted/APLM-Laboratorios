@@ -6,4 +6,4 @@
 | Pasta | Descrição | Status |
 | :--- | :--- | :--- |
 | [Laboratório 01](./Laboratorio01) | Introdução a Linguagem Kotlin | ✅ Concluído      |
-| [Laboratório 02](./Laboratorio02) | Introdução ao Android         | ⏳ Em progresso   |
+| [Laboratório 02](./Laboratorio02) | Introdução ao Android         | ✅ Concluído      |
