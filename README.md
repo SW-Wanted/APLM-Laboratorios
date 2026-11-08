@@ -6,4 +6,4 @@
 | Pasta | Descrição | Status |
 | :--- | :--- | :--- |
 | [Laboratório 01](./Laboratorio01) | Introdução a Linguagem Kotlin | ✅ Concluído      |
-| [Laboratório 02](./Laboratorio02) | Introdução ao Android         | ✅ Concluído      |
+| [Laboratório 02](./Laboratorio02) | Introdução ao Android: Java, Gradle, Kotlin e Jetpack Compose        | ✅ Concluído      |
