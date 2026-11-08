@@ -7,4 +7,4 @@
 | :--- | :--- | :--- |
 | [Laboratório 01](./Laboratorio01) | Introdução a Linguagem Kotlin | ✅ Concluído      |
 | [Laboratório 02](./Laboratorio02) | Introdução ao Android: **Java**, **Gradle**, **Kotlin** e **Jetpack Compose**        | ✅ Concluído      |
-| [Laboratório 03](./Laboratorio03) | Componentes da Aplicação Android: **Activity**, **Service**, **Broadcast Receiver** e **Content Provider** | ⏳ Em progresso      |
+| [Laboratório 03](./Laboratorio03) | Componentes da Aplicação Android: **Activity**, **Service**, **Receiver** e **Provider** | ⏳ Em progresso      |
