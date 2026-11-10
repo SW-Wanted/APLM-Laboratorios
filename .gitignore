@@ -1,0 +1,24 @@
+# IDE
+.idea/
+*.iml
+
+# Gradle / compilação
+.gradle/
+.kotlin/
+build/
+captures/
+.cxx/
+local.properties
+
+# Relatórios: só o PDF vai para o repositório
+*.docx
+~$*
+
+# Recursos extraídos ou pesados
+Laboratorio02/Parte_1/.resources/exercise-i/
+Laboratorio02/Parte_1/.resources/exercise-ii/
+Laboratorio03/Parte_1/.resources/*.zip
+
+# Sistema
+Thumbs.db
+.DS_Store
