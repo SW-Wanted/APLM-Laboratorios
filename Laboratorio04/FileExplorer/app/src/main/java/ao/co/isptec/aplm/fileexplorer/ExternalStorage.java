@@ -43,31 +43,35 @@ public class ExternalStorage extends Activity {
         });
     }
 
+    private File getDataFile() {
+        return new File(getExternalFilesDir(null), "test.txt");
+    }
+
     private void write() {
-        if (FileUtil.isExternalStorageWritable()) {
-            File dir = FileUtil.getExternalFilesDirAllApiLevels(this.getPackageName());
-            File file = new File(dir, "test.txt");
-            FileUtil.writeStringAsFile(input.getText().toString(), file);
-            Toast.makeText(this, "File written", Toast.LENGTH_SHORT).show();
+        if (!FileUtil.isExternalStorageWritable()) {
+            Toast.makeText(this, "External storage not writable", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        boolean ok = FileUtil.writeStringAsFile(input.getText().toString(), getDataFile());
+        Toast.makeText(this, ok ? "File written" : "Write failed", Toast.LENGTH_SHORT).show();
+        if (ok) {
             input.setText("");
             output.setText("");
-        } else {
-            Toast.makeText(this, "External storage not writable", Toast.LENGTH_SHORT).show();
         }
     }
 
     private void read() {
-        if (FileUtil.isExternalStorageReadable()) {
-            File dir = FileUtil.getExternalFilesDirAllApiLevels(this.getPackageName());
-            File file = new File(dir, "test.txt");
-            if (file.exists() && file.canRead()) {
-                output.setText(FileUtil.readFileAsString(file));
-                Toast.makeText(this, "File read", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, "Unable to read file: " + file.getAbsolutePath(), Toast.LENGTH_SHORT).show();
-            }
-        } else {
+        if (!FileUtil.isExternalStorageReadable()) {
             Toast.makeText(this, "External storage not readable", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        File file = getDataFile();
+        String content = file.isFile() ? FileUtil.readFileAsString(file) : null;
+        if (content != null) {
+            output.setText(content);
+            Toast.makeText(this, "File read", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Unable to read file: " + file.getAbsolutePath(), Toast.LENGTH_SHORT).show();
         }
     }
 }
