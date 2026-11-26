@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Producer Consumer With Looper</string>
+    <string name="hello_world">Producer Consumer With Looper</string>
+    <string name="action_settings">Settings</string>
+</resources>
