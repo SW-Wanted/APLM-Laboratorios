@@ -8,11 +8,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.util.Log;
 
 import java.io.File;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ExternalStorage extends Activity {
 
+    private final ExecutorService io = Executors.newSingleThreadExecutor();
     // wrap some operations that are likely to be needed in more than one place in FileUtil
 
     private EditText input;
@@ -43,36 +47,44 @@ public class ExternalStorage extends Activity {
         });
     }
 
-    private File getDataFile() {
-        return new File(getExternalFilesDir(null), "test.txt");
-    }
-
     private void write() {
-        if (!FileUtil.isExternalStorageWritable()) {
-            Toast.makeText(this, "External storage not writable", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        boolean ok = FileUtil.writeStringAsFile(input.getText().toString(), getDataFile());
-        Toast.makeText(this, ok ? "File written" : "Write failed", Toast.LENGTH_SHORT).show();
-        if (ok) {
-            input.setText("");
-            output.setText("");
-        }
+        final String text = input.getText().toString();
+        io.execute(() -> {
+            Log.d(Constants.LOG_TAG, "external write [" + Thread.currentThread().getName() + "]");
+            boolean ok = FileUtil.isExternalStorageWritable()
+                    && FileUtil.writeStringAsFile(text, new File(getExternalFilesDir(null), "test.txt"));
+            runOnUiThread(() -> {
+                Toast.makeText(this, ok ? "File written" : "Write failed", Toast.LENGTH_SHORT).show();
+                if (ok) {
+                    input.setText("");
+                    output.setText("");
+                }
+            });
+        });
     }
 
     private void read() {
-        if (!FileUtil.isExternalStorageReadable()) {
-            Toast.makeText(this, "External storage not readable", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        File file = getDataFile();
-        String content = file.isFile() ? FileUtil.readFileAsString(file) : null;
-        if (content != null) {
-            output.setText(content);
-            Toast.makeText(this, "File read", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, "Unable to read file: " + file.getAbsolutePath(), Toast.LENGTH_SHORT).show();
-        }
+        io.execute(() -> {
+            Log.d(Constants.LOG_TAG, "external read [" + Thread.currentThread().getName() + "]");
+            File file = new File(getExternalFilesDir(null), "test.txt");
+            String content = FileUtil.isExternalStorageReadable() && file.canRead()
+                    ? FileUtil.readFileAsString(file) : null;
+            runOnUiThread(() -> {
+                if (content != null) {
+                    output.setText(content);
+                    Toast.makeText(this, "File read", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, "Unable to read file: " + file.getAbsolutePath(),
+                            Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        io.shutdown();
+        super.onDestroy();
     }
 }
 

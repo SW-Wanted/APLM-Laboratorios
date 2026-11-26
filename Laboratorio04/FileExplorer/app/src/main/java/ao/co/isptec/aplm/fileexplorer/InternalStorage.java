@@ -16,11 +16,15 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Scanner;
+import java.nio.charset.StandardCharsets;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class InternalStorage extends Activity {
 
     private static final String LINE_SEP = System.getProperty("line.separator");
-
+    private static final String FILE_NAME = "test.txt";
+    private final ExecutorService io = Executors.newSingleThreadExecutor();
     private EditText input;
     private TextView output;
     private Button write;
@@ -50,53 +54,55 @@ public class InternalStorage extends Activity {
     }
 
     private void write() {
-        FileOutputStream fos = null;
-        try {
-            // note that there are many modes you can use
-            fos = openFileOutput("test.txt", Context.MODE_PRIVATE);
-            fos.write(input.getText().toString().getBytes());
-            Toast.makeText(this, "File written", Toast.LENGTH_SHORT).show();
-            input.setText("");
-            output.setText("");
-        } catch (FileNotFoundException e) {
-            Log.e(Constants.LOG_TAG, "File not found", e);
-        } catch (IOException e) {
-            Log.e(Constants.LOG_TAG, "IO problem", e);
-        } finally {
-            try {
-                fos.close();
+        final String text = input.getText().toString();      // UI thread
+        io.execute(() -> {                                    // worker
+            Log.d(Constants.LOG_TAG, "internal write [" + Thread.currentThread().getName() + "]");
+            boolean ok = false;
+            try (FileOutputStream fos = openFileOutput(FILE_NAME, Context.MODE_PRIVATE)) {
+                fos.write(text.getBytes(StandardCharsets.UTF_8));
+                ok = true;
             } catch (IOException e) {
-                Log.d("FileExplorer", "Close error.");
+                Log.e(Constants.LOG_TAG, "IO problem", e);
             }
-        }
+            final boolean success = ok;
+            runOnUiThread(() -> {                             // UI thread
+                Toast.makeText(this, success ? "File written" : "Write failed",
+                        Toast.LENGTH_SHORT).show();
+                if (success) {
+                    input.setText("");
+                    output.setText("");
+                }
+            });
+        });
     }
 
     private void read() {
-        FileInputStream fis = null;
-        Scanner scanner = null;
-        StringBuilder sb = new StringBuilder();
-        try {
-            fis = openFileInput("test.txt");
-            // scanner does mean one more object, but it's easier to work with
-            scanner = new Scanner(fis);
-            while (scanner.hasNextLine()) {
-                sb.append(scanner.nextLine() + LINE_SEP);
-            }
-            Toast.makeText(this, "File read", Toast.LENGTH_SHORT).show();
-        } catch (FileNotFoundException e) {
-            Log.e(Constants.LOG_TAG, "File not found", e);
-        } finally {
-            if (fis != null) {
-                try {
-                    fis.close();
-                } catch (IOException e) {
-                    Log.d("FileExplorer", "Close error.");
+        io.execute(() -> {
+            Log.d(Constants.LOG_TAG, "internal read [" + Thread.currentThread().getName() + "]");
+            StringBuilder sb = new StringBuilder();
+            boolean ok = false;
+            try (FileInputStream fis = openFileInput(FILE_NAME);
+                 Scanner scanner = new Scanner(fis)) {
+                while (scanner.hasNextLine()) {
+                    sb.append(scanner.nextLine()).append(LINE_SEP);
                 }
+                ok = true;
+            } catch (IOException e) {
+                Log.e(Constants.LOG_TAG, "File not found", e);
             }
-            if (scanner != null) {
-                scanner.close();
-            }
-        }
-        output.setText(sb.toString());
+            final boolean success = ok;
+            final String content = sb.toString();
+            runOnUiThread(() -> {
+                output.setText(content);
+                Toast.makeText(this, success ? "File read" : "Read failed",
+                        Toast.LENGTH_SHORT).show();
+            });
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        io.shutdown();
+        super.onDestroy();
     }
 }
