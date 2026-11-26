@@ -16,7 +16,7 @@ import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
     public static final String KEY_HANDLER_MSG = "status";
-    private static final String IMAGE_SOURCE = "https://android.com/images/froyo.png";
+    private static final String IMAGE_SOURCE = "https://github.com/SW-Wanted.png";
     private Button btnDownloadFile;
     private Button btnDownloadFileAsync;
     private TextView statusTextView;
