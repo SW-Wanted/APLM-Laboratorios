@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
     private static final String IMAGE_SOURCE = "https://github.com/SW-Wanted.png";
 
     // i. Handler associado à UI thread
-    private final Handler handler = new Handler(Looper.getMainLooper(), this);
+    private Handler handler;
     private Button btnDownloadFile;
     private Button btnDownloadFileAsync;
     private TextView statusTextView;
@@ -58,15 +58,12 @@ public class MainActivity extends AppCompatActivity implements Handler.Callback 
             }
         };
 
-        // exercise 1 - step 2 to implement
-        btnDownloadFileAsync.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
+        // exercise 1 - step 2
+        btnDownloadFileAsync.setOnClickListener(view ->
+                new DownloadTask(imageView, statusTextView).execute(IMAGE_SOURCE));
 
         // initialize handler
+        handler = new Handler(Looper.getMainLooper(), this);
     }
 
     // ii. Callback executado na UI thread
