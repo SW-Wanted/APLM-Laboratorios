@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
             Looper.prepare();
 
-            handler = new Handler() {
+            handler = new Handler(Looper.myLooper()) {
                 @Override
                 public void handleMessage(Message msg) {
                     int number = msg.what;
